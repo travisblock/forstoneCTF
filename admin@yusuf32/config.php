@@ -6,7 +6,6 @@ $password 	= "root";
 $db_name 	= "ctf";
 $base_url 	= "/";
 
-
 $con = mysqli_connect($host,$user,$password,$db_name);
 if(!$con) die("G");
 
@@ -16,13 +15,6 @@ if(!$con) die("G");
 function aman($data){
     $filter=addslashes(htmlentities(htmlspecialchars(stripslashes(strip_tags($data,ENT_QUOTES)))));
     return $filter;
-}
-
-function get_info($que){
-	$sql = mysqli_query($que);
-	$get_info = mysqli_fetch_array($sql);
-	$result[] = $get_info;
-	return $result;
 }
 
 function url($data){
