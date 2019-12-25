@@ -1,6 +1,5 @@
 <?php
-include_once "admin@yusuf32/config.php";
-// include_once "desc.php";
+include_once "admin@yusuf32/web-config.php";
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -10,17 +9,17 @@ include_once "admin@yusuf32/config.php";
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="<?= $description; ?>">
-  <meta name="author" content="<?= $author; ?>">
+  <meta name="author" content="ForstoneCTF">
   <meta name="keywords" content="CTF" />
   <meta name="language" content="indonesia">  
   <meta name="robots" content="all,follow">
   <link rel="shortcut icon" href="<?= $base_url; ?>img/logo.png">
-  <meta content='<?= $img_desc; ?>' property='og:image'/>
+  <meta content='<?= $img_header; ?>' property='og:image'/>
   <meta content='<?= $description; ?>' property='og:description'/>
-  <title>ForstoneCTF</title>
+  <title><?= $title; ?></title>
 
   <link href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<?= $base_url; ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="<?= $base_url; ?>vendor/font-awesome/css/all.min.css" rel="stylesheet" type="text/css">
   <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
   <link href="<?= $base_url; ?>assets/agency.css" rel="stylesheet">
   <link href="<?= $base_url; ?>assets/css/custom.css" rel="stylesheet">
@@ -60,7 +59,7 @@ include_once "admin@yusuf32/config.php";
   <header class="masthead">
     <div class="container">
       <div class="intro-text">
-        <div class="intro-lead-in">Welcome To ForstoneCTF</div>
+        <div class="intro-lead-in">Welcome To <?= $title; ?></div>
         <div class="intro-heading text-uppercase">Let's Play</div>
         <a class="btn btn-danger text-uppercase js-scroll-trigger" href="#play" style="margin:10px">Play</a>
         <a class="btn btn-primary text-uppercase js-scroll-trigger" href="#services">Get Started</a>
@@ -74,7 +73,7 @@ include_once "admin@yusuf32/config.php";
       <div class="row">
         <div class="col-lg-12 text-center">
           <h2 class="section-heading text-uppercase">Lets Play</h2>
-          <h3 class="section-subheading text-muted">ForstoneCTF</h3>
+          <h3 class="section-subheading text-muted"><?= $title; ?></h3>
         </div>
       </div>
         <div class="col-lg-12 text-center">
@@ -89,7 +88,7 @@ include_once "admin@yusuf32/config.php";
       <div class="row">
         <div class="col-lg-12 text-center">
           <h2 class="section-heading text-uppercase">Category</h2>
-          <h3 class="section-subheading text-muted">Category in ForstoneCTF</h3>
+          <h3 class="section-subheading text-muted">Category in <?= $title; ?></h3>
         </div>
       </div>
       <div class="row text-center">
@@ -175,7 +174,7 @@ include_once "admin@yusuf32/config.php";
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <span class="copyright">Copyright &copy; Forstone 2019</span>
+          <span class="copyright">Copyright &copy; <?= $title; ?></span>
         </div>
         <div class="col-md-4 ptg">
           <ul class="list-inline social-buttons">
@@ -194,7 +193,7 @@ include_once "admin@yusuf32/config.php";
         <div class="col-md-4 ptg">
           <ul class="list-inline quicklinks">
             <li class="list-inline-item">
-              <a href="http://www.indexattacker.web.id" target="_blank">Powered by Index Attacker</a>
+              <a href="http://www.indexattacker.web.id" target="_blank">Powered by ForstoneCTF</a>
             </li>
           </ul>
         </div>
@@ -202,11 +201,11 @@ include_once "admin@yusuf32/config.php";
     </div>
   </footer>
 
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="assets/agency.js"></script>
+  <script src="<?= $base_url; ?>vendor/jquery/jquery.min.js"></script>
+  <script src="<?= $base_url; ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= $base_url; ?>vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="<?= $base_url; ?>vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="<?= $base_url; ?>assets/agency.js"></script>
   <script>
   $('.carousel').carousel({
   interval: 4500

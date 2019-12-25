@@ -1,5 +1,5 @@
 <?php
-include "./admin@yusuf32/config.php";
+include "./admin@yusuf32/web-config.php";
 error_reporting(0);
 $id   = mysqli_escape_string($con, $_GET['nick']);
 $sql  = mysqli_query($con, "SELECT * FROM user where url='$id'");
@@ -13,46 +13,35 @@ if($ono > 0){
 <!DOCTYPE html>
 <html lang="id">
 
-<style>
-    @media only screen and (max-width: 600px) {
-        .penting a{
-            font-size:13px;
-            
-        }
-        .ptg{
-            display:none;
-        }
-    } 
-</style>
 <head>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="ForstoneCTF - <?php echo aman($ok['nick'])?> Profiles, <?php echo "Rank $renk[rank], $ok[nilai] Points,  Since ";echo date('j F Y', strtotime($ok['date'])); ?> ">
-  <meta content='ForstoneCTF - <?php echo aman($ok['nick'])?> Profiles, <?php echo "Rank $renk[rank], $ok[nilai] Points,  Since ";echo date('j F Y', strtotime($ok['date'])); ?> ' property='og:description'/>
+  <meta name="description" content="<?php echo $title . " - " . aman($ok['nick'])?> Profiles, <?php echo "Rank $renk[rank], $ok[nilai] Points,  Since ";echo date('j F Y', strtotime($ok['date'])); ?> ">
+  <meta content='<?php echo $title . " - " . aman($ok['nick'])?> Profiles, <?php echo "Rank $renk[rank], $ok[nilai] Points,  Since ";echo date('j F Y', strtotime($ok['date'])); ?> ' property='og:description'/>
   <meta content='http://forstone.web.id/ctf/user/img/<?php echo $ok['foto']; ?>' property='og:image'/>
-  <meta name="author" content="FORSTONE">
-  <meta name="keywords" content="Forstone, TKJ, Web TKJ" />
+  <meta name="author" content="ForstoneCTF">
+  <meta name="keywords" content="CTF" />
   <meta name="language" content="indonesia">  
   <meta name="robots" content="all,follow">
   <link rel="shortcut icon" href="/img/logo.png">
   <title><?php echo aman($ok['nick']);?> Profile</title>
 
-  <!-- Bootstrap core CSS -->
-  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="/ctf/assets/agensi.css" rel="stylesheet">
-  <link href="/ctf/assets/css/custom.css" rel="stylesheet">
-  <link href="/vendor/fontawesome-free/css/all.css" rel="stylesheet">
+  <link href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?= $base_url; ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="<?= $base_url; ?>assets/agensi.css" rel="stylesheet">
+  <link href="<?= $base_url; ?>assets/css/custom.css" rel="stylesheet">
+  <link href="<?= $base_url; ?>vendor/fontawesome-free/css/all.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 
 </head>
 
 <body id="page-top">
 
-  <!-- Navigation -->
+
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="/ctf">ForstoneCTF</a>
+      <a class="navbar-brand js-scroll-trigger" href="<?= $base_url; ?>"><?= $title; ?></a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -60,13 +49,13 @@ if($ono > 0){
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav text-uppercase ml-auto">
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/ctf/scoreboard">Scoreboard</a>
+            <a class="nav-link js-scroll-trigger" href="<?= $base_url; ?>scoreboard">Scoreboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/ctf/user/">Login</a>
+            <a class="nav-link js-scroll-trigger" href="<?= $base_url; ?>user/">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/ctf/user/register">Register</a>
+            <a class="nav-link js-scroll-trigger" href="<?= $base_url; ?>user/register">Register</a>
           </li>
         </ul>
       </div>
@@ -87,11 +76,11 @@ if($ono > 0){
             </div>
             <div class="team-member">
               <?php 
-              if($ok['foto'] == 'kosong'){
+              if(empty($ok['foto'])){
                   $nik = aman($ok['nick']);
-                echo "<img class='mx-auto rounded-circlee' src='/ctf/user/img/dev.png' alt='ForstoneCTF - $nik Profile' title='ForstoneCTF - $nik Profile'>";
+                echo "<img class='mx-auto rounded-circlee' src='" . $base_url . "user/img/dev.png' alt='" . $title . " - $nik Profile' title='" . $title . " - $nik Profile'>";
               }else{
-                echo "<img class='mx-auto rounded-circlee' src='/ctf/user/img/$ok[foto]' alt='ForstoneCTF - $nik Profile' title='ForstoneCTF - $nik Profile'>";
+                echo "<img class='mx-auto rounded-circlee' src='" . $base_url . "user/img/$ok[foto]' alt='" . $title . " - $nik Profile' title='" . $title . " - $nik Profile'>";
               }
               ?>
                 <h4><?php echo aman($ok['nick']); ?></h4>                
@@ -200,19 +189,12 @@ if($ono > 0){
     </div>
     </section>
 
-  <!-- Footer -->
-  <div class="text-center  text-white penting">
-    <a href="/sitemap" target="_blank">Sitemap</a>
-    <a href="/about" target="_blank">About</a>
-    <a href="/privacy-policy" target="_blank">Privacy</a>
-    <a href="/disclaimer" target="_blank">Disclaimer</a>
-    <a href="/contact" target="_blank">Contact</a>
-  </div>
+
   <footer class=" bg-dark text-white">
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <span class="copyright">Copyright &copy; Forstone 2019</span>
+          <span class="copyright">Copyright &copy; <?= $title; ?></span>
         </div>
         <div class="col-md-4 ptg">
           <ul class="list-inline social-buttons">
@@ -231,178 +213,24 @@ if($ono > 0){
         <div class="col-md-4 ptg">
           <ul class="list-inline quicklinks">
             <li class="list-inline-item">
-              <a href="http://www.indexattacker.web.id" target="_blank">Powered by Index Attacker</a>
+              <a href="http://www.indexattacker.web.id" target="_blank">Powered by ForstoneCTF</a>
             </li>
           </ul>
         </div>
-      </div><br>In colaboration with : <a href="https://www.alternate-csec.io/" target="_blank">alternate-csec.io</a>
+      </div>
     </div>
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
-  <script src="/vendor/jquery/jquery.min.js"></script>
-  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="assets/agency.js"></script>
+  <script src="<?= $base_url; ?>vendor/jquery/jquery.min.js"></script>
+  <script src="<?= $base_url; ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= $base_url; ?>vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="<?= $base_url; ?>assets/agency.js"></script>
 
 </body>
 
 </html>
 <?php
 }else{
-  ?>
-  <!DOCTYPE html>
-<html lang="id">
-
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Forstone - 404 Page</title>
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:700,900" rel="stylesheet">
-	<link rel="shortcut icon" href="http://pluspng.com/img-png/world-wide-web-png-web-development-computer-icons-world-wide-web-900.jpg" type="image/x-icon">
-		<link rel="icon" href="img/logo.png" type="image/x-icon">
-<style type="text/css">
-	* {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
-
-body {
-
-  padding: 0;
-  margin: 0;
-}
-
-#notfound {
-  position: relative;
-  height: 100vh;
-  background: transparent;
-}
-
-#notfound .notfound {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-}
-
-.notfound {
-  max-width: 767px;
-  width: 100%;
-  line-height: 1.4;
-  text-align: center;
-}
-
-.notfound .notfound-404 {
-  position: relative;
-  height: 180px;
-  margin-bottom: 20px;
-  z-index: -1;
-}
-
-.notfound .notfound-404 h1 {
-    font-family: 'Montserrat', sans-serif;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50% , -50%);
-    -ms-transform: translate(-50% , -50%);
-    transform: translate(-50% , -50%);
-    font-size: 224px;
-    font-weight: 900;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left: -12px;
-    color: #030200;
-    text-transform: uppercase;
-    text-shadow: -1px -1px 0px #96561f, 1px 1px 0px #9c7331;
-    letter-spacing: -20px;
-}
-
-
-.notfound .notfound-404 h2 {
-  font-family: 'Montserrat', sans-serif;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 110px;
-  font-size: 42px;
-  font-weight: 700;
-  color: #fff;
-  text-transform: uppercase;
-  text-shadow: 0px 2px 0px #9a521b;
-  letter-spacing: 13px;
-  margin: 0;
-}
-
-.notfound h3 {
-  font-family: 'Montserrat', sans-serif;
-  position: absolute;
-  left: 0;
-  right: 0;
-  padding-top:30px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  text-transform: uppercase;
-  margin: 0;
-}
-
-.notfound a {
-  font-family: 'Montserrat', sans-serif;
-  display: inline-block;
-  text-transform: uppercase;
-  color: #ffffff;
-  text-decoration: none;
-  border: 2px solid #9a521b;
-  background: #9a521b;
-  padding: 10px 40px;
-  font-size: 14px;
-  font-weight: 700;
-  -webkit-transition: 0.2s all;
-  transition: 0.2s all;
-  border-radius: 20px;
-}
-
-.notfound a:hover {
-  color: #fff;
-  border:2px solid #9a521b;
-  background: transparent;
-}
-
-@media only screen and (max-width: 767px) {
-    .notfound .notfound-404 h2 {
-        font-size: 24px;
-    }
-}
-
-@media only screen and (max-width: 480px) {
-  .notfound .notfound-404 h1 {
-      font-size: 182px;
-  }
-}
-</style>
-</head>
-
-<body style="background:url('/img/ss.jpeg') no-repeat center;background-size:cover;">
-
-	<div id="notfound">
-		<div class="notfound">
-			<div class="notfound-404">
-				<h1>404</h1>
-				<h2>Page Not Found</h2>
-			</div>
-			<a onClick='history.back();'>Back To Home</a>
-			
-		</div>
-	</div>
-
-
-</body>
-</html>
-<?php
+  include '404.html';
 }
 ?>

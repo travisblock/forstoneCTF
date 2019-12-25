@@ -1,44 +1,36 @@
 <?php
-include "./admin@yusuf32/config.php";
+include_once "admin@yusuf32/web-config.php";
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="utf-8">
-  
-  <meta name="description" content="Informasi tentang update score dari ForstoneCTF">
-  <meta name="author" content="FORSTONE">
-  <meta name="keywords" content="Forstone, TKJ, Web TKJ" />
-  <meta name="language" content="indonesia">
-  <link rel="shortcut icon" href="/img/logo.png">  
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="<?= $description; ?>">
+  <meta name="author" content="ForstoneCTF">
+  <meta name="keywords" content="CTF" />
+  <meta name="language" content="indonesia">  
   <meta name="robots" content="all,follow">
-  <title>ForstoneCTF - Scoreboard</title>
+  <link rel="shortcut icon" href="<?= $base_url; ?>img/logo.png">
+  <meta content='<?= $img_header; ?>' property='og:image'/>
+  <meta content='<?= $description; ?>' property='og:description'/>
+  <title><?= $title; ?></title>
 
-  <!-- Bootstrap  CSS -->
   <link href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="<?= $base_url; ?>vendor/font-awesome/css/all.min.css" rel="stylesheet" type="text/css">
   <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-  <link href="assets/agency.css" rel="stylesheet">
-  <link href="assets/css/custom.css" rel="stylesheet">
-  <link href="vendor/fontawesome-free/css/all.css" rel="stylesheet">
-<style>
-    @media only screen and (max-width: 600px) {
-        .penting a{
-            font-size:13px;
-            
-        }
-        .ptg{
-            display:none;
-        }
-    } 
-</style>
+  <link href="<?= $base_url; ?>assets/agency.css" rel="stylesheet">
+  <link href="<?= $base_url; ?>assets/css/custom.css" rel="stylesheet">
+  <link href="<?= $base_url; ?>vendor/fontawesome-free/css/all.css" rel="stylesheet">
 </head>
+
 <body id="page-top">
 
-  <!-- Navigation -->
+
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNavi">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="/">ForstoneCTF</a>
+      <a class="navbar-brand js-scroll-trigger" href="<?= $base_url; ?>"><?= $title; ?></a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -49,10 +41,10 @@ include "./admin@yusuf32/config.php";
             <a class="nav-link js-scroll-trigger" href="#score">Scoreboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="user">Play</a>
+            <a class="nav-link" href="<?= $base_url; ?>user">Play</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="user/register">Register</a>
+            <a class="nav-link" href="<?= $base_url; ?>user/register">Register</a>
           </li>
         </ul>
       </div>
@@ -63,7 +55,7 @@ include "./admin@yusuf32/config.php";
   <header class="mastheadz">
     <div class="container">
       <div class="intro-text">
-        <div class="intro-heading">ForstoneCTF</div>
+        <div class="intro-heading"><?= $title; ?></div>
         <a class="btn btn-primary text-uppercase js-scroll-trigger" href="#score">./Scoreboard</a>
       </div>
     </div>
@@ -78,7 +70,7 @@ include "./admin@yusuf32/config.php";
             <thead style="background:#343a40;color:#ababab;" >
                 <tr>
                   <th width="5%">Rank</th>
-                  <th width="10%"><img src="user/img/sysctf/person.png" width="30%"></th>
+                  <th width="10%"><img src="<?= $base_url; ?>user/img/sysctf/person.png" width="30%"></th>
                   <th width="10%">Nick</th>
                   <th>Score</th>				
                 </tr>
@@ -99,17 +91,17 @@ include "./admin@yusuf32/config.php";
                         $no
                       </td>
                       <td width='10%'>
-                      <a href='player/$ok[url]' class='no-style'>"; 
+                      <a href='". $base_url . "player/$ok[url]' class='no-style'>"; 
                       $poto= mysqli_query($con, "SELECT foto from user ");
-                      if($ok['foto'] == 'kosong'){
-                        echo "<img class='avatar' src='user/img/dev.png' alt='ForstoneCTF - $nick' title='ForstoneCTF - $nick Photo profile'>";
+                      if(empty($ok['foto'])){
+                        echo "<img class='avatar' src='". $base_url . "user/img/dev.png' alt='ForstoneCTF - $nick' title='ForstoneCTF - $nick Photo profile'>";
                        }else{
-                         echo "<img class='avatar' src='user/img/$ok[foto]' alt='ForstoneCTF - $nick' title='ForstoneCTF - $nick Photo profile'>";
+                         echo "<img class='avatar' src='". $base_url . "user/img/$ok[foto]' alt='ForstoneCTF - $nick' title='ForstoneCTF - $nick Photo profile'>";
                         }echo"</a>
                       </td> 
                 
                       <td width='20%' class='text-center'>
-                        <a href='/player/$ok[url]' class='no-style'>$nick</a>
+                        <a href='". $base_url . "player/$ok[url]' class='no-style'>$nick</a>
                       </td>
               
                       <td>
@@ -126,12 +118,11 @@ include "./admin@yusuf32/config.php";
        $jikasql = mysqli_query($con, "SELECT * from user");
        $jml = mysqli_num_rows($jikasql);
        if($jml < 16){
-        echo "<style>.hx32{display:none}</style>";
+        echo "<style>.pagenav{display:none}</style>";
        }else{
        ?>
-      <nav class="hx32" aria-label="Page navigation example">
+      <nav class="pagenav" aria-label="Page navigation example">
       <ul class="pagination justify-content-center ">
-        <!-- LINK FIRST AND PREV -->
         <?php
         if($page == 1){
         ?>
@@ -141,13 +132,12 @@ include "./admin@yusuf32/config.php";
         }else{
           $link_prev = ($page > 1)? $page - 1 : 1;
         ?>
-          <li class="page-item"><a class="page-link" href="scoreboard/1">First</a></li>
-          <li class="page-item"><a class="page-link" href="scoreboard/<?php echo $link_prev; ?>">&laquo;</a></li>
+          <li class="page-item"><a class="page-link" href="<?= $base_url; ?>scoreboard/1">First</a></li>
+          <li class="page-item"><a class="page-link" href="<?= $base_url; ?>scoreboard/<?php echo $link_prev; ?>">&laquo;</a></li>
         <?php
         }
         ?>
         
-        <!-- LINK NUMBER -->
         <?php
         
         $sql2 = mysqli_query($con, "SELECT COUNT(*) AS jumlah FROM user");
@@ -161,12 +151,11 @@ include "./admin@yusuf32/config.php";
         for($i = $start_number; $i <= $end_number; $i++){
           $link_active = ($page == $i)? ' class="page-item active"' : '';
         ?>
-          <li<?php echo $link_active; ?>><a class="page-link" href="scoreboard/<?php echo $i; ?>"><?php echo $i; ?></a></li>
+          <li<?php echo $link_active; ?>><a class="page-link" href="<?= $base_url; ?>scoreboard/<?php echo $i; ?>"><?php echo $i; ?></a></li>
         <?php
         }
         ?>
         
-        <!-- LINK NEXT AND LAST -->
         <?php
         if($page == $jumlah_page){
         ?>
@@ -176,8 +165,8 @@ include "./admin@yusuf32/config.php";
         }else{
           $link_next = ($page < $jumlah_page)? $page + 1 : $jumlah_page;
         ?>
-          <li class="page-item" ><a class="page-link" href="scoreboard/<?php echo $link_next; ?>">&raquo;</a></li>
-          <li class="page-item" ><a class="page-link" href="scoreboard/<?php echo $jumlah_page; ?>">Last</a></li>
+          <li class="page-item" ><a class="page-link" href="<?= $base_url; ?>scoreboard/<?php echo $link_next; ?>">&raquo;</a></li>
+          <li class="page-item" ><a class="page-link" href="<?= $base_url; ?>scoreboard/<?php echo $jumlah_page; ?>">Last</a></li>
         <?php
         }
       }
@@ -187,19 +176,11 @@ include "./admin@yusuf32/config.php";
     </div>
   </section>
 
-  <!-- Footer -->
-  <div class="text-center  text-white penting">
-    <a href="sitemap" target="_blank">Sitemap</a>
-    <a href="about" target="_blank">About</a>
-    <a href="privacy-policy" target="_blank">Privacy</a>
-    <a href="disclaimer" target="_blank">Disclaimer</a>
-    <a href="contact" target="_blank">Contact</a>
-  </div>
   <footer class=" bg-dark text-white">
     <div class="container">
       <div class="row">
         <div class="col-md-4 ">
-          <span class="copyright">Copyright &copy; Forstone 2019</span>
+          <span class="copyright">Copyright &copy; <?= $title; ?></span>
         </div>
         <div class="col-md-4 ptg">
           <ul class="list-inline social-buttons">
@@ -218,7 +199,7 @@ include "./admin@yusuf32/config.php";
         <div class="col-md-4 ptg">
           <ul class="list-inline quicklinks">
             <li class="list-inline-item">
-              <a href="http://www.indexattacker.web.id" target="_blank">Powered by Index Attacker</a>
+              <a href="http://www.indexattacker.web.id" target="_blank">Powered by ForstoneCTF</a>
             </li>
           </ul>
         </div>
@@ -226,11 +207,11 @@ include "./admin@yusuf32/config.php";
     </div>
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="assets/agensi.js"></script>
+
+  <script src="<?= $base_url; ?>vendor/jquery/jquery.min.js"></script>
+  <script src="<?= $base_url; ?>vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= $base_url; ?>vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="<?= $base_url; ?>vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="<?= $base_url; ?>assets/agensi.js"></script>
 </body>
 </html>
