@@ -1,7 +1,7 @@
 <?php 
 ob_start();
 session_start();
-include_once("../admin@yusuf32/config.php");
+include_once "../admin@yusuf32/web-config.php";
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@ include_once("../admin@yusuf32/config.php");
   <meta charset="utf-8" />
   <link rel="icon" type="image/png" href="/img/logo.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>Forstone - CTF</title>
+  <title><?= $title; ?></title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <link rel="stylesheet" href="../assets/css/custom.css">
   <link rel="stylesheet" href="../../vendor/fontawesome-free/css/all.css">
@@ -39,8 +39,8 @@ include_once("../admin@yusuf32/config.php");
   <div class="wrapper ">
     <div class="sidebar" data-color="azure" data-background-color="black" >
       <div class="logo">
-        <a  class="simple-text logo-normal" href="/ctf" target="_blank">
-          FORSTONE CTF
+        <a  class="simple-text logo-normal" href="<?= $base_url; ?>" target="_blank">
+          <?= $title; ?>
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -106,10 +106,10 @@ include_once("../admin@yusuf32/config.php");
                         echo "
               <li class='nav-item'>
                 <a class='nav-link'>";
-                if($d['foto'] == 'kosong'){
-                  echo "<img class='avatar' src='img/dev.png' alt='ForstoneCTF - $nickk' title='ForstoneCTF - $nickk'>";
+                if(empty($d['foto'])){
+                  echo "<img class='avatar' src='img/dev.png' alt='$title - $nickk' title='$title - $nickk'>";
                 }else{
-                  echo "<img class='avatar' src='img/$d[foto]' alt='ForstoneCTF - $nickk' title='ForstoneCTF - $nickk'>";
+                  echo "<img class='avatar' src='img/$d[foto]' alt='$title - $nickk' title='$title - $nickk'>";
                 }echo "
                   <p class='d-lg-none d-md-block'>
                     
@@ -125,7 +125,7 @@ include_once("../admin@yusuf32/config.php");
         <div class='container-fluid'>
           <div class='row'>
             "; }
-            include "config.php";
+            include "user-config.php";
             
             ?>
     </div>

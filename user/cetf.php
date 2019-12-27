@@ -78,7 +78,7 @@
       <footer class='footer'>
         <div class='container-fluid'>          
           <div class='copyright text-center' id='date'>
-           Powered by <a href="http://indexattacker.web.id" target="_blank"> Index Attacker</a> | <a href="https://www.alternate-csec.io" target="_blank">alternate-csec.io</a>
+           Powered by <a href="http://indexattacker.web.id" target="_blank">ForstoneCTF</a>
           </div>
         </div>
       </footer>

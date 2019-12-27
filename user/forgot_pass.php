@@ -1,22 +1,21 @@
+<?php
+  include "../admin@yusuf32/web-config.php";
+?>
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Forgot Password | ForstoneCTF</title>
-    <meta name="description" content="Lupa kata sandi | ForstoneCTF">
-    <meta name="author" content="FORSTONE">
-    <meta name="keywords" content="Forstone, TKJ, Web TKJ" />
+    <title>Forgot Password | <?= $title; ?></title>
+    <meta name="description" content="Login User <?= $title; ?>">
+    <meta name="author" content="ForstoneCTF">
+    <meta name="keywords" content="CTF, <?= $title; ?>" />
     <meta name="language" content="indonesia">
-    <link rel="shortcut icon" href="/img/logo.png">
     <meta name="robots" content="all,follow">
-    <link rel="stylesheet" href="../../admin/home/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../admin/home/vendor/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../admin/home/css/font.css">
-    <link rel="stylesheet" href="../../admin/home/css/style.default.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="../../admin/home/css/custom.css">
-    <link rel="shortcut icon" href="/img/logo.png">
+    <link rel="stylesheet" href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $base_url; ?>assets/css/style.default.css" id="theme-stylesheet">
+    <link rel="shortcut icon" href="<?= $logo; ?>">
   </head>
   <body>
     <div class="login-page">
@@ -27,743 +26,224 @@
               <div class="form d-flex align-items-center">              
                 <div class="content">
 	             <?php
-	            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-	                include "../admin@yusuf32/config.php";
-	                $lama = 1;
-	                $hapus_yang_sudah = mysqli_query($con, "DELETE FROM tbl_reset WHERE DATEDIFF(CURDATE(), tgl) > $lama ");
-	                
+	            if($_SERVER['REQUEST_METHOD'] == 'POST'){	                
 	                $usrn 	= aman($_POST['username']);
 	                $email 	= aman($_POST['email']);
-	                $sql 	= mysqli_query($con, "SELECT * FROM user where usrname='$usrn' AND email='$email'");
-	                $ada 	= mysqli_num_rows($sql);
+	                $sql 	  = mysqli_query($con, "SELECT * FROM user where usrname='$usrn' AND email='$email'");
+	                $ada 	  = mysqli_num_rows($sql);
 	                $data 	= mysqli_fetch_array($sql);
-	                
-	                //cek apakah sudah 3x reset pass
-	                $id_user_fix    = $data['id'];
-                    $query_cek_data = mysqli_query($con, "SELECT * from tbl_reset where id_user = '$id_user_fix' ");
-                    $fetch_datanya  = mysqli_fetch_array($query_cek_data);
-                    $jumlah_reset   = $fetch_datanya['jml'];
-                    if($jumlah_reset >= 3){
-                        
-                        echo "<div class='alert alert-danger'><strong>Gagal: </strong>Kamu sudah 3x reset, coba besok lagi</div>";
-                        
-                    }
-
-	                $usermu = $data['usrname'];
-	                $emailu = $data['email'];
-	                $paswot = $data['password'];
-	                if($jumlah_reset <= 3){
-	                if($ada > 0 ){
-	                    
+	                if($ada > 0 ){	                    
 	                	$code = uniqid(true);
-						$codx = md5($code);
-						$id   = intval($data['id']);
-						$query = mysqli_query($con, "UPDATE user set code='$codx' where id='$id'");
-						
-						
-	                	require 'PHPMailer/PHPMailerAutoload.php';
-						$mail = new PHPMailer;
-
-
-                        //catet data dan record ke db
-                        $tgll = date("Y-m-d");
-                        $jml = 1;
-                        $select_dulu    = mysqli_query($con, "SELECT * FROM tbl_reset WHERE id_user='$id' ");
-                        $cek_datanya    = mysqli_num_rows($select_dulu);
-                        if($cek_datanya > 0){
-                            
-					        $tambahkan      = mysqli_query($con, "UPDATE tbl_reset SET jml=jml+1 where id_user='$id' ");
-                            
-                        }else{
-					     $query_lebokno  = mysqli_query($con, "INSERT INTO tbl_reset(id_user,jml,tgl) VALUES('$id', '$jml', '$tgll')");
-                        }
-					    
-						// Konfigurasi SMTP
-						$mail->isSMTP();
-						$mail->Host = 'mail.forstone.web.id';
-						$mail->SMTPAuth = true;
-						$mail->Username = 'ajid@forstone.web.id';
-						$mail->Password = 'ajidganteng1337';
-						$mail->SMTPSecure = 'tls';
-						$mail->Port = 587;
-
-						$mail->setFrom('ajid@forstone.web.id', 'ForstoneCTF');
-						$mail->addReplyTo('ajid@forstone.web.id', 'ForstoneCTF');
-
-						// Menambahkan penerima
-						$mail->addAddress("$email");
-						
-						// Subjek email
-						$mail->Subject = 'Forgot Password - ForstoneCTF';
-
-						// Mengatur format email ke HTML
-						$mail->isHTML(true);
-
-						// Konten/isi email
-						$mailContent = "
-            <!doctype html>
-            <html xmlns='http://www.w3.org/1999/xhtml' xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='urn:schemas-microsoft-com:office:office'>
-              <head>
-                <!-- NAME: SIMPLE TEXT -->
-                <!--[if gte mso 15]>
-                    <xml>
-                        <o:OfficeDocumentSettings>
-                        <o:AllowPNG/>
-                        <o:PixelsPerInch>96</o:PixelsPerInch>
-                        </o:OfficeDocumentSettings>
-                    </xml>
-                    <![endif]-->
-                <meta charset='UTF-8'>
-                    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1'>
-                <title>Reset Password</title>
-                    
-                <style type='text/css'>
-                p{
-                  margin:10px 0;
-                  padding:0;
-                }
-                table{
-                  border-collapse:collapse;
-                }
-                h1,h2,h3,h4,h5,h6{
-                  display:block;
-                  margin:0;
-                  padding:0;
-                }
-                img,a img{
-                  border:0;
-                  height:auto;
-                  outline:none;
-                  text-decoration:none;
-                }
-                body,#bodyTable,#bodyCell{
-                  height:100%;
-                  margin:0;
-                  padding:0;
-                  width:100%;
-                }
-                .mcnPreviewText{
-                  display:none !important;
-                }
-                #outlook a{
-                  padding:0;
-                }
-                img{
-                  -ms-interpolation-mode:bicubic;
-                }
-                table{
-                  mso-table-lspace:0pt;
-                  mso-table-rspace:0pt;
-                }
-                .ReadMsgBody{
-                  width:100%;
-                }
-                .ExternalClass{
-                  width:100%;
-                }
-                p,a,li,td,blockquote{
-                  mso-line-height-rule:exactly;
-                }
-                a[href^=tel],a[href^=sms]{
-                  color:inherit;
-                  cursor:default;
-                  text-decoration:none;
-                }
-                p,a,li,td,body,table,blockquote{
-                  -ms-text-size-adjust:100%;
-                  -webkit-text-size-adjust:100%;
-                }
-                .ExternalClass,.ExternalClass p,.ExternalClass td,.ExternalClass div,.ExternalClass span,.ExternalClass font{
-                  line-height:100%;
-                }
-                a[x-apple-data-detectors]{
-                  color:inherit !important;
-                  text-decoration:none !important;
-                  font-size:inherit !important;
-                  font-family:inherit !important;
-                  font-weight:inherit !important;
-                  line-height:inherit !important;
-                }
-                #bodyCell{
-                  padding:10px;
-                }
-                .templateContainer{
-                  max-width:600px !important;
-                }
-                a.mcnButton{
-                  display:block;
-                }
-                .mcnImage{
-                  vertical-align:bottom;
-                }
-                .mcnTextContent{
-                  word-break:break-word;
-                }
-                .mcnTextContent img{
-                  height:auto !important;
-                }
-                .mcnDividerBlock{
-                  table-layout:fixed !important;
-                }
-              /*
-              @tab Page
-              @section Background Style
-              @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
-              */
-                body,#bodyTable{
-                  /*@editable*/background-color:#f5f2f2;
-                  /*@editable*/background-image:none;
-                  /*@editable*/background-repeat:no-repeat;
-                  /*@editable*/background-position:center;
-                  /*@editable*/background-size:cover;
-                }
-              /*
-              @tab Page
-              @section Background Style
-              @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
-              */
-                #bodyCell{
-                  /*@editable*/border-top:0;
-                }
-              /*
-              @tab Page
-              @section Email Border
-              @tip Set the border for your email.
-              */
-                .templateContainer{
-                  /*@editable*/border:0;
-                }
-              /*
-              @tab Page
-              @section Heading 1
-              @tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
-              @style heading 1
-              */
-                h1{
-                  /*@editable*/color:#202020;
-                  /*@editable*/font-family:Helvetica;
-                  /*@editable*/font-size:26px;
-                  /*@editable*/font-style:normal;
-                  /*@editable*/font-weight:bold;
-                  /*@editable*/line-height:125%;
-                  /*@editable*/letter-spacing:normal;
-                  /*@editable*/text-align:left;
-                }
-              /*
-              @tab Page
-              @section Heading 2
-              @tip Set the styling for all second-level headings in your emails.
-              @style heading 2
-              */
-                h2{
-                  /*@editable*/color:#202020;
-                  /*@editable*/font-family:Helvetica;
-                  /*@editable*/font-size:22px;
-                  /*@editable*/font-style:normal;
-                  /*@editable*/font-weight:bold;
-                  /*@editable*/line-height:125%;
-                  /*@editable*/letter-spacing:normal;
-                  /*@editable*/text-align:left;
-                }
-              /*
-              @tab Page
-              @section Heading 3
-              @tip Set the styling for all third-level headings in your emails.
-              @style heading 3
-              */
-                h3{
-                  /*@editable*/color:#202020;
-                  /*@editable*/font-family:Helvetica;
-                  /*@editable*/font-size:20px;
-                  /*@editable*/font-style:normal;
-                  /*@editable*/font-weight:bold;
-                  /*@editable*/line-height:125%;
-                  /*@editable*/letter-spacing:normal;
-                  /*@editable*/text-align:left;
-                }
-              /*
-              @tab Page
-              @section Heading 4
-              @tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
-              @style heading 4
-              */
-                h4{
-                  /*@editable*/color:#202020;
-                  /*@editable*/font-family:Helvetica;
-                  /*@editable*/font-size:18px;
-                  /*@editable*/font-style:normal;
-                  /*@editable*/font-weight:bold;
-                  /*@editable*/line-height:125%;
-                  /*@editable*/letter-spacing:normal;
-                  /*@editable*/text-align:left;
-                }
-              /*
-              @tab Header
-              @section Header Style
-              @tip Set the borders for your email's header area.
-              */
-                #templateHeader{
-                  /*@editable*/border-top:0;
-                  /*@editable*/border-bottom:0;
-                }
-              /*
-              @tab Header
-              @section Header Text
-              @tip Set the styling for your email's header text. Choose a size and color that is easy to read.
-              */
-                #templateHeader .mcnTextContent,#templateHeader .mcnTextContent p{
-                  /*@editable*/color:#202020;
-                  /*@editable*/font-family:Helvetica;
-                  /*@editable*/font-size:16px;
-                  /*@editable*/line-height:150%;
-                  /*@editable*/text-align:left;
-                }
-              /*
-              @tab Header
-              @section Header Link
-              @tip Set the styling for your email's header links. Choose a color that helps them stand out from your text.
-              */
-                #templateHeader .mcnTextContent a,#templateHeader .mcnTextContent p a{
-                  /*@editable*/color:#2BAADF;
-                  /*@editable*/font-weight:normal;
-                  /*@editable*/text-decoration:underline;
-                }
-              /*
-              @tab Body
-              @section Body Style
-              @tip Set the borders for your email's body area.
-              */
-                #templateBody{
-                  /*@editable*/border-top:0;
-                  /*@editable*/border-bottom:0;
-                }
-              /*
-              @tab Body
-              @section Body Text
-              @tip Set the styling for your email's body text. Choose a size and color that is easy to read.
-              */
-                #templateBody .mcnTextContent,#templateBody .mcnTextContent p{
-                  /*@editable*/color:#202020;
-                  /*@editable*/font-family:Helvetica;
-                  /*@editable*/font-size:16px;
-                  /*@editable*/line-height:150%;
-                  /*@editable*/text-align:left;
-                }
-              /*
-              @tab Body
-              @section Body Link
-              @tip Set the styling for your email's body links. Choose a color that helps them stand out from your text.
-              */
-                #templateBody .mcnTextContent a,#templateBody .mcnTextContent p a{
-                  /*@editable*/color:#2BAADF;
-                  /*@editable*/font-weight:normal;
-                  /*@editable*/text-decoration:underline;
-                }
-              /*
-              @tab Footer
-              @section Footer Style
-              @tip Set the borders for your email's footer area.
-              */
-                #templateFooter{
-                  /*@editable*/border-top:0;
-                  /*@editable*/border-bottom:0;
-                }
-              /*
-              @tab Footer
-              @section Footer Text
-              @tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
-              */
-                #templateFooter .mcnTextContent,#templateFooter .mcnTextContent p{
-                  /*@editable*/color:#202020;
-                  /*@editable*/font-family:Helvetica;
-                  /*@editable*/font-size:12px;
-                  /*@editable*/line-height:150%;
-                  /*@editable*/text-align:left;
-                }
-              /*
-              @tab Footer
-              @section Footer Link
-              @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
-              */
-                #templateFooter .mcnTextContent a,#templateFooter .mcnTextContent p a{
-                  /*@editable*/color:#b90000;
-                  /*@editable*/font-weight:normal;
-                  /*@editable*/text-decoration:underline;
-                }
-              @media only screen and (min-width:768px){
-                .templateContainer{
-                  width:600px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                body,table,td,p,a,li,blockquote{
-                  -webkit-text-size-adjust:none !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                body{
-                  width:100% !important;
-                  min-width:100% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                #bodyCell{
-                  padding-top:10px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnImage{
-                  width:100% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnCartContainer,.mcnCaptionTopContent,.mcnRecContentContainer,.mcnCaptionBottomContent,.mcnTextContentContainer,.mcnBoxedTextContentContainer,.mcnImageGroupContentContainer,.mcnCaptionLeftTextContentContainer,.mcnCaptionRightTextContentContainer,.mcnCaptionLeftImageContentContainer,.mcnCaptionRightImageContentContainer,.mcnImageCardLeftTextContentContainer,.mcnImageCardRightTextContentContainer{
-                  max-width:100% !important;
-                  width:100% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnBoxedTextContentContainer{
-                  min-width:100% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnImageGroupContent{
-                  padding:9px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnCaptionLeftContentOuter .mcnTextContent,.mcnCaptionRightContentOuter .mcnTextContent{
-                  padding-top:9px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnImageCardTopImageContent,.mcnCaptionBlockInner .mcnCaptionTopContent:last-child .mcnTextContent{
-                  padding-top:18px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnImageCardBottomImageContent{
-                  padding-bottom:9px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnImageGroupBlockInner{
-                  padding-top:0 !important;
-                  padding-bottom:0 !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnImageGroupBlockOuter{
-                  padding-top:9px !important;
-                  padding-bottom:9px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnTextContent,.mcnBoxedTextContentColumn{
-                  padding-right:18px !important;
-                  padding-left:18px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcnImageCardLeftImageContent,.mcnImageCardRightImageContent{
-                  padding-right:18px !important;
-                  padding-bottom:0 !important;
-                  padding-left:18px !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-                .mcpreview-image-uploader{
-                  display:none !important;
-                  width:100% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-              /*
-              @tab Mobile Styles
-              @section Heading 1
-              @tip Make the first-level headings larger in size for better readability on small screens.
-              */
-                h1{
-                  /*@editable*/font-size:22px !important;
-                  /*@editable*/line-height:125% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-              /*
-              @tab Mobile Styles
-              @section Heading 2
-              @tip Make the second-level headings larger in size for better readability on small screens.
-              */
-                h2{
-                  /*@editable*/font-size:20px !important;
-                  /*@editable*/line-height:125% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-              /*
-              @tab Mobile Styles
-              @section Heading 3
-              @tip Make the third-level headings larger in size for better readability on small screens.
-              */
-                h3{
-                  /*@editable*/font-size:18px !important;
-                  /*@editable*/line-height:125% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-              /*
-              @tab Mobile Styles
-              @section Heading 4
-              @tip Make the fourth-level headings larger in size for better readability on small screens.
-              */
-                h4{
-                  /*@editable*/font-size:16px !important;
-                  /*@editable*/line-height:150% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-              /*
-              @tab Mobile Styles
-              @section Boxed Text
-              @tip Make the boxed text larger in size for better readability on small screens. We recommend a font size of at least 16px.
-              */
-                table.mcnBoxedTextContentContainer td.mcnTextContent,td.mcnBoxedTextContentContainer td.mcnTextContent p{
-                  /*@editable*/font-size:14px !important;
-                  /*@editable*/line-height:150% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-              /*
-              @tab Mobile Styles
-              @section Header Text
-              @tip Make the header text larger in size for better readability on small screens.
-              */
-                td#templateHeader td.mcnTextContent,td#templateHeader td.mcnTextContent p{
-                  /*@editable*/font-size:16px !important;
-                  /*@editable*/line-height:150% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-              /*
-              @tab Mobile Styles
-              @section Body Text
-              @tip Make the body text larger in size for better readability on small screens. We recommend a font size of at least 16px.
-              */
-                td#templateBody td.mcnTextContent,td#templateBody td.mcnTextContent p{
-                  /*@editable*/font-size:16px !important;
-                  /*@editable*/line-height:150% !important;
-                }
-
-            } @media only screen and (max-width: 480px){
-              /*
-              @tab Mobile Styles
-              @section Footer Text
-              @tip Make the footer content text larger in size for better readability on small screens.
-              */
-                td#templateFooter td.mcnTextContent,td#templateFooter td.mcnTextContent p{
-                  /*@editable*/font-size:14px !important;
-                  /*@editable*/line-height:150% !important;
-                }
-
-            }</style></head>
-                <body>
-              
-                    <center>
-                        <table align='center' border='0' cellpadding='0' cellspacing='0' height='100%' width='100%' id='bodyTable'>
-                            <tr>
-                                <td align='left' valign='top' id='bodyCell'>
-                                    <!-- BEGIN TEMPLATE // -->
-                        <!--[if gte mso 9]>
-                        <table align='center' border='0' cellspacing='0' cellpadding='0' width='600' style='width:600px;'>
-                        <tr>
-                        <td align='center' valign='top' width='600' style='width:600px;'>
-                        <![endif]-->
-                                    <table border='0' cellpadding='0' cellspacing='0' width='100%' class='templateContainer'>
-                                        <tr>
-                                            <td valign='top' id='templateHeader'><table border='0' cellpadding='0' cellspacing='0' width='100%' class='mcnTextBlock' style='min-width:100%;'>
-                <tbody class='mcnTextBlockOuter'>
-                    <tr>
-                        <td valign='top' class='mcnTextBlockInner' style='padding-top:9px;'>
-                            <!--[if mso]>
-                    <table align='left' border='0' cellspacing='0' cellpadding='0' width='100%' style='width:100%;'>
-                    <tr>
-                    <![endif]-->
-                      
-                    <!--[if mso]>
-                    <td valign='top' width='600' style='width:600px;'>
-                    <![endif]-->
-                            <table align='left' border='0' cellpadding='0' cellspacing='0' style='max-width:100%; min-width:100%;' width='100%' class='mcnTextContentContainer'>
-                                <tbody><tr>
-                                    
-                                    <td valign='top' class='mcnTextContent' style='padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;'>
-                                    
-                                        <font style='font-size: 40px;font-style: italic;font-weight: bold;font-family: Verdana,geneva,sans-serif;color: #003366;'>Forstone</font>
-            <font style='font-size: 40px;font-style: italic;font-weight: bold;font-family: Verdana,geneva,sans-serif;color: #009cde;'>CTF</font>
-                                    </td>
-                                </tr>
-                            </tbody></table>
-                    <!--[if mso]>
-                    </td>
-                    <![endif]-->
-                            
-                    <!--[if mso]>
-                    </tr>
-                    </table>
-                    <![endif]-->
-                        </td>
-                    </tr>
-                </tbody>
-            </table></td>
-                                        </tr>
-                                        <tr>
-                                            <td valign='top' id='templateBody'><table border='0' cellpadding='0' cellspacing='0' width='100%' class='mcnTextBlock' style='min-width:100%;'>
-                <tbody class='mcnTextBlockOuter'>
-                    <tr>
-                        <td valign='top' class='mcnTextBlockInner' style='padding-top:9px;'>
-                            <!--[if mso]>
-                    <table align='left' border='0' cellspacing='0' cellpadding='0' width='100%' style='width:100%;'>
-                    <tr>
-                    <![endif]-->
-                      
-                    <!--[if mso]>
-                    <td valign='top' width='600' style='width:600px;'>
-                    <![endif]-->
-                            <table align='left' border='0' cellpadding='0' cellspacing='0' style='max-width:100%; min-width:100%;' width='100%' class='mcnTextContentContainer'>
-                                <tbody><tr>
-                                    
-                                    <td valign='top' class='mcnTextContent' style='padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;'>
-                                    
-                                        <span style='font-size:16px'><span style='font-family:verdana,geneva,sans-serif'>Anda lupa password ya &nbsp;</span></span><br>
-            &nbsp;
-                                    </td>
-                                </tr>
-                            </tbody></table>
-                    <!--[if mso]>
-                    </td>
-                    <![endif]-->
-                            
-                    <!--[if mso]>
-                    </tr>
-                    </table>
-                    <![endif]-->
-                        </td>
-                    </tr>
-                </tbody>
-            </table></td>
-                                        </tr>
-                                        <tr>
-                                            <td valign='top' id='templateFooter'><table border='0' cellpadding='0' cellspacing='0' width='100%' class='mcnTextBlock' style='min-width:100%;'>
-                <tbody class='mcnTextBlockOuter'>
-                    <tr>
-                        <td valign='top' class='mcnTextBlockInner' style='padding-top:9px;'>
-                            <!--[if mso]>
-                    <table align='left' border='0' cellspacing='0' cellpadding='0' width='100%' style='width:100%;'>
-                    <tr>
-                    <![endif]-->
-                      
-                    <!--[if mso]>
-                    <td valign='top' width='600' style='width:600px;'>
-                    <![endif]-->
-                            <table align='left' border='0' cellpadding='0' cellspacing='0' style='max-width:100%; min-width:100%;' width='100%' class='mcnTextContentContainer'>
-                                <tbody><tr>
-                                    
-                                    <td valign='top' class='mcnTextContent' style='padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;'>
-                                    
-                                        <ul>
-              <li><span style='font-size:14px'><span style='font-family:verdana,geneva,sans-serif'>Username : $usermu </span></span></li>
-              <li><span style='font-size:14px'><span style='font-family:verdana,geneva,sans-serif'>Email  : $email</span></span></li>
-              
-            </ul>
-
-                                    </td>
-                                </tr>
-                            </tbody></table>
-                    <!--[if mso]>
-                    </td>
-                    <![endif]-->
-                            
-                    <!--[if mso]>
-                    </tr>
-                    </table>
-                    <![endif]-->
-                        </td>
-                    </tr>
-                </tbody>
-            </table><table border='0' cellpadding='0' cellspacing='0' width='100%' class='mcnTextBlock' style='min-width:100%;'>
-                <tbody class='mcnTextBlockOuter'>
-                    <tr>
-                        <td valign='top' class='mcnTextBlockInner' style='padding-top:9px;'>
-                            <!--[if mso]>
-                    <table align='left' border='0' cellspacing='0' cellpadding='0' width='100%' style='width:100%;'>
-                    <tr>
-                    <![endif]-->
-                      
-                    <!--[if mso]>
-                    <td valign='top' width='600' style='width:600px;'>
-                    <![endif]-->
-                            <table align='left' border='0' cellpadding='0' cellspacing='0' style='max-width:100%; min-width:100%;' width='100%' class='mcnTextContentContainer'>
-                                <tbody><tr>
-                                    
-                                    <td valign='top' class='mcnTextContent' style='padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;'>
-                                    
-                                        <span style='font-size:14px'><span style='font-family:verdana,geneva,sans-serif'>&nbsp;To reset your password :<a href='http://forstone.web.id/ctf/user/reset_pass?kode=$codx ' target='_blank' title='Click Here '>Click Here</a></span></span>
-                                    </td>
-                                </tr>
-                            </tbody></table>
-                    <!--[if mso]>
-                    </td>
-                    <![endif]-->
-                            
-                    <!--[if mso]>
-                    </tr>
-                    </table>
-                    <![endif]-->
-                        </td>
-                    </tr>
-                </tbody>
-            </table></td>
-                                        </tr>
-                                    </table>
-                        <!--[if gte mso 9]>
-                        </td>
-                        </tr>
-                        </table>
-                        <![endif]-->
-                                    <!-- // END TEMPLATE -->
-                                </td>
-                            </tr>
-                        </table>
-                    </center>
-                </body>
-            </html>
-            ";
-						$mail->Body = $mailContent;
-
-						// Menambahakn lampiran
-						//$mail->addAttachment('lmp/file1.pdf');
-						//$mail->addAttachment('lmp/file2.png', 'nama-baru-file2.png'); //atur nama baru
-
-						// Kirim email
-	                    
-						if(!$mail->send()){
-						    echo "<div class='alert alert-danger'><strong>Error: </strong> Pasan tidak terkirim $mail->ErrorInfo</div>";
-						}else{
-						    echo "<div class='alert alert-success'><strong>Success: </strong> Silahkan Cek Emailmu</div>";
-						   
-						}
-	                	
+        						$code = md5($code);
+        						$id   = intval($data['id']);
+        						$query= mysqli_query($con, "UPDATE user set code='$code' where id='$id'");
+                    $url  = $_SERVER['HTTP_HOST'];									
+        	          require 'PHPMailer/PHPMailerAutoload.php';
+        						$mail = new PHPMailer;
+        						$mail->isSMTP();
+        						$mail->Host = 'smtp.gmail.com';
+        						$mail->SMTPAuth = true;
+        						$mail->Username = 'ajidgans69@gmail.com';
+        						$mail->Password = 'kuc1wa00';
+        						$mail->SMTPSecure = 'tls';
+        						$mail->Port = 587;
+        						$mail->setFrom("ajid@forstone.web.id", "$title");
+        						$mail->addReplyTo("ajid@forstone.web.id", "$title");
+        						$mail->addAddress("$email");
+        						$mail->Subject = 'Forgot Password - ' . $title;
+        						$mail->isHTML(true);
+        						$mailContent = " 
+                      <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'> 
+                      <html xmlns='http://www.w3.org/1999/xhtml' style='background-color: rgb(240, 240, 240);'> 
+                       <head> 
+                        <title></title> 
+                        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /> 
+                        <meta charset='utf-8' /> 
+                        <meta name='viewport' content='width=device-width, initial-scale=1' /> 
+                        <meta http-equiv='X-UA-Compatible' content='IE=edge' /> 
+                        <style type='text/css'> /* GT AMERICA */ @font-face { font-display: fallback; font-family: 'GT America Regular'; font-weight: 400; src: url('https://www.exploretock.com/fonts/gt-america/GT-America-Standard-Regular.woff2') format('woff2'), url('https://www.exploretock.com/fonts/gt-america/GT-America-Standard-Regular.woff') format('woff'), url('https://www.exploretock.com/fonts/gt-america/GT-America-Standard-Regular.ttf') format('truetype'); } @font-face { font-display: fallback; font-family: 'GT America Medium'; font-weight: 600; src: url('https://www.exploretock.com/fonts/gt-america/GT-America-Standard-Medium.woff2') format('woff2'), url('https://www.exploretock.com/fonts/gt-america/GT-America-Standard-Medium.woff') format('woff'), url('https://www.exploretock.com/fonts/gt-america/GT-America-Standard-Medium.ttf') format('truetype'); } @font-face { font-display: fallback; font-family: 'GT America Condensed Bold'; font-weight: 700; src: url('https://www.exploretock.com/fonts/gt-america/GT-America-Condensed-Bold.woff2') format('woff2'), url('https://www.exploretock.com/fonts/gt-america/GT-America-Condensed-Bold.woff') format('woff'), url('https://www.exploretock.com/fonts/gt-america/GT-America-Condensed-Bold.ttf') format('truetype'); } /* CLIENT-SPECIFIC RESET */ body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; } /* Prevent WebKit and Windows mobile changing default text sizes */ table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; } /* Remove spacing between tables in Outlook 2007 and up */ img { -ms-interpolation-mode: bicubic; } /* Allow smoother rendering of resized image in Internet Explorer */ .im { color: inherit !important; } /* DEVICE-SPECIFIC RESET */ a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important; } /* iOS BLUE LINKS */ /* RESET */ img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; } table { border-collapse: collapse; } table td { border-collapse: collapse; display: table-cell; } body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; } /* BG COLORS */ .mainTable { background-color: #F0F0F0; } .mainTable--hospitality { background-color: #f7f2ed; } html { background-color: #F0F0F0; } /* VARIABLES */ .bg-white { background-color: white; } .hr { /* Cross-client horizontal rule. Adapted from https://litmus.com/community/discussions/4633-is-there-a-reliable-1px-horizontal-rule-method */ background-color: #d3d3d8; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-line-height-rule: exactly; line-height: 1px; } .textAlignLeft { text-align: left !important; } .textAlignRight { text-align: right !important; } .textAlignCenter{ text-align: center !important; } .mt1 { margin-top: 6px; } .list { padding-left: 18px; margin: 0; } /* TYPOGRAPHY */ body { font-family: 'GT America Regular', 'Roboto', 'Helvetica', 'Arial', sans-serif; font-weight: 400; color: #4f4f65; -webkit-font-smoothing: antialiased; -ms-text-size-adjust:100%; -moz-osx-font-smoothing: grayscale; font-smoothing: always; text-rendering: optimizeLegibility; } .h1 { font-family: 'GT America Condensed Bold', 'Roboto Condensed', 'Roboto', 'Helvetica', 'Arial', sans-serif; font-weight: 700; vertical-align: middle; font-size: 36px; line-height: 42px; } .h2 { font-family: 'GT America Medium', 'Roboto', 'Helvetica', 'Arial', sans-serif; font-weight: 600; vertical-align: middle; font-size: 16px; line-height: 24px; } .text { font-family: 'GT America Regular', 'Roboto', 'Helvetica', 'Arial', sans-serif; font-weight: 400; font-size: 16px; line-height: 21px; } .text-list { font-family: 'GT America Regular', 'Roboto', 'Helvetica', 'Arial', sans-serif; font-weight: 400; font-size: 16px; line-height: 25px; } .textSmall { font-family: 'GT America Regular', 'Roboto', 'Helvetica', 'Arial', sans-serif; font-weight: 400; font-size: 14px; } .text-xsmall { font-family: 'GT America Regular', 'Roboto', 'Helvetica', 'Arial', sans-serif; font-size: 11px; text-transform: uppercase; line-height: 22px; letter-spacing: 1px; } .text-bold { font-weight: 600; } .text-link { text-decoration: underline; } .text-linkNoUnderline { text-decoration: none; } .text-strike { text-decoration: line-through; } /* FONT COLORS */ .textColorDark { color: #23233e; } .textColorNormal { color: #4f4f65; } .textColorBlue { color: #2020c0; } .textColorGrayDark { color: #7B7B8B; } .textColorGray { color: #A5A8AD; } .textColorWhite { color: #FFFFFF; } .textColorRed { color: #df3232; } /* BUTTON */ .Button-primary-wrapper { border-radius: 3px; background-color: #2020C0; } .Button-primary { font-family: 'GT America Medium', 'Roboto', 'Helvetica', 'Arial', sans-serif; border-radius: 3px; border: 1px solid #2020C0; color: #ffffff; display: block; font-size: 16px; font-weight: 600; padding: 18px; text-decoration: none; } .Button-secondary-wrapper { border-radius: 3px; background-color: #ffffff; } .Button-secondary { font-family: 'GT America Medium', 'Roboto', 'Helvetica', 'Arial', sans-serif; border-radius: 3px; border: 1px solid #2020C0; color: #2020C0; display: block; font-size: 16px; font-weight: 600; padding: 18px; text-decoration: none; } /* LAYOUT */ .Content-container { padding-left: 60px; padding-right: 60px; } .Content-container--main { padding-top: 54px; padding-bottom: 60px; } .Content { width: 580px; margin: 0 auto; } .wrapper { max-width: 600px; } .section { padding: 24px 0px; border-bottom: 1px solid #d3d3d8; } .section--noBorder { padding: 24px 0px 0; } .section--last { padding: 24px 0px; } .message { background-color: #F4F4F5; padding: 18px; } .card { border: 1px solid #d3d3d8; padding: 18px; } /* HEADER */ .header-tockLogoImage { display: block; color: #F0F0F0; } .header-heroImage { padding-bottom: 24px; } /* PREHEADER */ .preheader { display: none; font-size: 1px; color: #FFFFFF; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; } /* BANNER */ .notice { padding: 12px; background: #23233E; color: #FFFFFF; display: block; font-size: 14px; font-family: 'GT America Medium', 'Roboto', 'Helvetica', 'Arial', sans-serif; font-weight: 600; } /* INTRO */ .section--intro { padding-bottom: 48px; } /* BOOKING INFO */ .business-logo__container { width: 48px; height: 48px; border-radius: 3px; border: 1px solid #d3d3d8; overflow: hidden; } .business-logo__image { border: 1px solid transparent; border-radius: 3px; width: 48px; height: 48px; display: block; } .business-address--address { width: 50%; } .business-address--map { width: 50%; } .business-address--map-image { width: 100%; } /* MOBILE TICKETS */ .mobile-ticket--description { width: 65%; margin-top: 12px; margin-right: 5%; } .mobile-ticket--code { width: 30%; } .mobile-ticket--code-image { width: 100%; } /* RESERVATION ACTIONS */ .linksTable { border-bottom: 1px solid #d3d3d8; } .linksTableRow { padding: 24px 12px; } .actions-icon { vertical-align: middle; } .actions-text { vertical-align: middle; } /* RECEIPT */ .receipt__container { border: 1px solid #d3d3d8; padding: 24px; } .receipt__row { border-top: 1px solid #d3d3d8; } /* FEEDBACK ICONS */ .feedback-link { border: 1px solid #d4d5da; border-radius: 3px; display: inline-block; width: calc(32% - 2px); padding: 10px 0; } .feedback-link-bumper { display: inline-block; width: 1%; } .feedback-link img { height: 50px; width: 50px; } /* SOCIAL ICONS */ .social-link { display: inline-block; width: auto; } .social-link-text { padding: 14px 24px 14px 14px; } /* TABLET STYLES */ @media screen and (max-width: 648px) { /* DEVICE-SPECIFIC RESET */ div[style*='margin: 16px 0;'] { margin: 0 !important; } /* ANDROID CENTER FIX */ /* LAYOUT */ .wrapper { width: 100% !important; max-width: 100% !important; } .Content { width: 90% !important; } .Content-container { padding-left: 36px !important; padding-right: 36px !important; } .Content-container--main { padding-top: 30px !important; padding-bottom: 42px !important; } .responsiveTable { width: 100% !important; } /* RESERVATION ACTIONS */ .linksTableRow { padding-left: 0 !important; padding-right: 0 !important; padding-top: 12px !important; padding-bottom: 12px !important; } .linksTableRow--borderRight { border-right: none !important; padding-left: 0 !important; padding-right: 0 !important; } /* FEEDBACK LINK */ .feedback-link img { height: 38px !important; width: 38px !important; } } /* MOBILE STYLES */ @media screen and (max-width: 480px) { /* TYPOGRAPHY */ .h1 { font-size: 30px !important; line-height: 30px !important; } .text { font-size: 16px !important; line-height: 22px !important; } /* BUTTON */ .mobile-buttonContainer { width: 100% !important; } /* LAYOUT */ .Content { width: 100% !important; } .Content-container { padding-left: 18px !important; padding-right: 18px !important; } .Content-container--main { padding-top: 24px !important; padding-bottom: 30px !important; } .section { padding: 18px 0 !important; } .section--last { padding: 18px 0 !important; } .header { padding: 0 18px !important; } .business-address--address { width: 100% !important; } .business-address--map { margin-top: 30px !important; width: 100% !important; } .mobile-ticket--description { width: 100% !important; margin-top: 0px !important; } .mobile-ticket--code { margin-top: 30px !important; margin-left: 0; width: 100% !important; } /* RECEIPT */ .receipt__container { padding: 12px !important; } /* SOCIAL ICONS */ .social-link { display: block !important; width: 100% !important; border-bottom: 1px solid #d3d3d8 !important; } /* INTRO */ .section--intro { padding-top: 18px !important; padding-bottom: 18px !important; } } </style> 
+                       </head> 
+                       <body style='margin: 0 !important; padding: 0 !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; height: 100%; margin: 0; padding: 0; width: 100%; font-family: &quot;GT America Regular&quot;, &quot;Roboto&quot;, &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; font-weight: 400; color: rgb(79, 79, 101); -webkit-font-smoothing: antialiased; -ms-text-size-adjust: 100%; -moz-osx-font-smoothing: grayscale; font-smoothing: always; text-rendering: optimizeLegibility;'> 
+                        <!-- EXTRA METADATA MARKUP --> 
+                        <!--[if mso]>
+                          <style type='text/css'>
+                      .h1 {font-family: 'Helvetica', 'Arial', sans-serif !important; font-weight: 700 !important; vertical-align: middle !important; font-size: 36px !important; mso-line-height-rule: exactly;line-height: 42px !important;}
+                      .h2 {font-family: 'Helvetica', 'Arial', sans-serif !important;font-weight: 600 !important;vertical-align: middle !important;font-size: 16px !important;mso-line-height-rule: exactly;line-height: 24px !important;}
+                      .text {font-family: 'Helvetica', 'Arial', sans-serif !important;font-weight: 400 !important;font-size: 16px !important;mso-line-height-rule: exactly;line-height: 21px !important;}
+                      .text-list {font-family: 'Helvetica', 'Arial', sans-serif !important;font-weight: 400 !important;font-size: 16px !important;mso-line-height-rule: exactly;line-height: 25px !important;}
+                      .textSmall {font-family: 'Helvetica', 'Arial', sans-serif !important;font-weight: 400 !important;font-size: 14px !important;}
+                      .text-xsmall {font-family: 'Helvetica', 'Arial', sans-serif !important;font-size: 11px !important;text-transform: uppercase !important;mso-line-height-rule: exactly;line-height: 22px !important;letter-spacing: 1px !important;}
+                      .text-bold {font-weight: 600 !important;}
+                      .text-link {text-decoration: underline !important;}
+                      .text-linkNoUnderline {text-decoration: none !important;}
+                      .text-strike {text-decoration: line-through !important;}
+                      .textColorDark {color: #23233e !important;}
+                      .textColorNormal {color: #4f4f65 !important;}
+                      .textColorBlue {color: #2020c0 !important;}
+                      .textColorGray {color: #A5A8AD !important;}
+                      .textColorWhite {color: #FFFFFF !important;}
+                      .Button-primary {font-family: 'Helvetica', 'Arial', sans-serif !important;border-radius: 3px !important;border: 1px solid #2020C0 !important;color: #ffffff !important;display: block !important;font-size: 16px !important;font-weight: 600 !important;padding: 18px !important;text-decoration: none !important;}
+                      .Button-secondary {font-family: 'Helvetica', 'Arial', sans-serif !important;border-radius: 3px !important;border: 1px solid #2020C0 !important;color: #2020C0 !important;display: block !important;font-size: 16px !important;font-weight: 600 !important;padding: 18px !important;text-decoration: none !important;}
+                          </style>
+                          <![endif]--> 
+                        <!-- HIDDEN PREHEADER TEXT --> 
+                        <div class='preheader' style='display: none; font-size: 1px; color: rgb(255, 255, 255); line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;'> 
+                        </div> 
+                        <table border='0' cellpadding='0' cellspacing='0' width='100%' class=' mainTable  ' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; background-color: rgb(240, 240, 240);'> 
+                         <!-- HEADER --> 
+                         <tr> 
+                          <td align='center' class='header' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> 
+                           <!--[if (gte mso 9)|(IE)]>
+                          <table align='center' border='0' cellspacing='0' cellpadding='0' width='600'>
+                          <tr>
+                          <td align='center' valign='top' width='600'>
+                          <![endif]--> 
+                           <table border='0' cellpadding='0' cellspacing='0' width='100%' class='Content' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; width: 580px; margin: 0 auto;'> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr> 
+                             <td align='left' valign='middle' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> </td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                           </table> 
+                           <!--[if (gte mso 9)|(IE)]>
+                          </td>
+                          </tr>
+                          </table>
+                          <![endif]--> </td> 
+                         </tr> 
+                         <!-- CONTENT --> 
+                         <tr> 
+                          <td align='center' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> 
+                           <!--[if (gte mso 9)|(IE)]>
+                          <table align='center' border='0' cellspacing='0' cellpadding='0' width='600'>
+                          <tr>
+                          <td align='center' valign='top' width='600'>
+                          <![endif]--> 
+                           <table border='0' cellpadding='0' cellspacing='0' width='100%' class='Content bg-white' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; background-color: white; width: 580px; margin: 0 auto;'> 
+                            <tr> 
+                             <td class='Content-container Content-container--main text textColorNormal' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell; font-family: &quot;GT America Regular&quot;, &quot;Roboto&quot;, &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; font-weight: 400; font-size: 16px; line-height: 21px; color: rgb(79, 79, 101); padding-left: 60px; padding-right: 60px; padding-top: 54px; padding-bottom: 60px;'> 
+                              <table width='100%' border='0' cellspacing='0' cellpadding='0' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse;'> 
+                               <tr> 
+                                <td valign='top' align='left' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> 
+                                 <table width='100%' border='0' cellspacing='0' cellpadding='0' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse;'> 
+                                  <tr> 
+                                   <td align='left' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> <span class='h1 textColorDark' style='font-family: &quot;GT America Condensed Bold&quot;, &quot;Roboto Condensed&quot;, &quot;Roboto&quot;, &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; font-weight: 700; vertical-align: middle; font-size: 36px; line-height: 42px; color: rgb(35, 35, 62);'>Reset your password</span> </td> 
+                                  </tr> 
+                                  <tr class='spacer'> 
+                                   <td height='18px' colspan='2' style='font-size: 18px; line-height:18px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                                  </tr> 
+                                  <tr> 
+                                   <td align='left' colspan='2' valign='top' width='100%' height='1' class='hr' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell; background-color: rgb(211, 211, 216); border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-line-height-rule: exactly; line-height: 1px;'>
+                                    <!--[if gte mso 15]>&nbsp;<![endif]--></td> 
+                                  </tr> 
+                                  <tr class='spacer'> 
+                                   <td height='18px' colspan='2' style='font-size: 18px; line-height:18px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                                  </tr> 
+                                 </table> </td> 
+                               </tr> 
+                               <tr> 
+                                <td valign='top' align='left' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> 
+                                 <table border='0' cellpadding='0' cellspacing='0' width='100%' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse;'> 
+                                  <tr> 
+                                   <td align='left' class='text textColorNormal' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell; font-family: &quot;GT America Regular&quot;, &quot;Roboto&quot;, &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; font-weight: 400; font-size: 16px; line-height: 21px; color: rgb(79, 79, 101);'> Need to reset your password? No problem! Just click the button below and you will be on your way. If you did not make this request, please ignore this email. </td> 
+                                  </tr> 
+                                  <tr class='spacer'> 
+                                   <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                                  </tr> 
+                                  <tr class='spacer'> 
+                                   <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                                  </tr> 
+                                  <tr> 
+                                   <td align='center' valign='center' width='100%' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> 
+                                    <table border='0' cellspacing='0' cellpadding='0' width='100%' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse;'> 
+                                     <tr> 
+                                      <td align='center' valign='center' width='100%' class='Button-primary-wrapper' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell; border-radius: 3px; background-color: rgb(32, 32, 192);'> <a href='" . $url $base_url . "user/reset_pass?kode=$code' target='_blank' class='Button-primary' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; font-family: &quot;GT America Medium&quot;, &quot;Roboto&quot;, &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; border-radius: 3px; border: 1px solid rgb(32, 32, 192); color: rgb(255, 255, 255); display: block; font-size: 16px; font-weight: 600; padding: 18px; text-decoration: none;'> Reset your password </a> </td> 
+                                     </tr> 
+                                    </table> </td> 
+                                  </tr> 
+                                 </table> </td> 
+                               </tr> 
+                              </table> </td> 
+                            </tr> 
+                           </table> </td> 
+                         </tr> 
+                         <!-- FOOTER --> 
+                         <tr> 
+                          <td align='center' class='Content' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell; width: 580px; margin: 0 auto;'> 
+                           <!-- Will most likely required a feature flag --> 
+                           <!--[if (gte mso 9)|(IE)]>
+                      <table align='center' border='0' cellspacing='0' cellpadding='0' width='600'>
+                      <tr>
+                      <td align='center' valign='top' width='600'>
+                      <![endif]--> 
+                           <table width='100%' border='0' cellspacing='0' cellpadding='0' align='center' class='Content-container' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; padding-left: 60px; padding-right: 60px;'> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr> 
+                             <td align='center' valign='top' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> </td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='18px' colspan='2' style='font-size: 18px; line-height:18px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr> 
+                             <td align='center' style='-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'> 
+                              <div class='text-xsmall textColorNormal' style='font-family: &quot;GT America Regular&quot;, &quot;Roboto&quot;, &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; font-size: 11px; text-transform: uppercase; line-height: 22px; letter-spacing: 1px; color: rgb(79, 79, 101);'>
+                               Powered by ForstoneCTF
+                              </div> 
+                              <div class='text-xsmall textColorNormal' style='font-family: &quot;GT America Regular&quot;, &quot;Roboto&quot;, &quot;Helvetica&quot;, &quot;Arial&quot;, sans-serif; font-size: 11px; text-transform: uppercase; line-height: 22px; letter-spacing: 1px; color: rgb(79, 79, 101);'>
+                               All Rights Reserved
+                              </div> </td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                            <tr class='spacer'> 
+                             <td height='12px' colspan='2' style='font-size: 12px; line-height:12px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; display: table-cell;'>&nbsp;</td> 
+                            </tr> 
+                           </table> 
+                           <!--[if (gte mso 9)|(IE)]>
+                      </td>
+                      </tr>
+                      </table>
+                      <![endif]--> </td> 
+                         </tr> 
+                        </table> 
+                       
+                      </body> 
+                      </html>";
+        						$mail->Body = $mailContent;        	                    
+        						if(!$mail->send()){
+        						    echo "<div class='alert alert-danger'><strong>Error: </strong> Pasan tidak terkirim $mail->ErrorInfo</div>";
+        						}else{
+        						    echo "<div class='alert alert-success'><strong>Success: </strong> Silahkan Cek Emailmu</div>";
+        						}
 	                }else{
 	                	echo "<div class='alert alert-danger'><strong>Error: </strong> Username dan Email tidak di temukan</div>";
 	                }
-	               }//penutup if $jumlah_reset < 4
 	            }
-
 	            ?>
                   <form method="POST" class="form-validate">
                     <div class="form-group">
-                      
                       <input id="login-username" type="text" name="username" required data-msg="Please enter your username" class="input-material">
                       <label for="login-username" class="label-material">User Name</label>
                     </div>
@@ -776,36 +256,29 @@
                 </div>
               </div>
             </div>
-            
             <div class="col-lg-5">
               <div class="info d-flex align-items-center">
                 <div class="content">
                   <div class="logo">
-                    <h1><a href="/ctf" target="_blank">Forgot Passwd</a></h1>
+                    <h1><a href="<?= $base_url; ?>" target="_blank">Forgot Passwd</a></h1>
                   </div>
                   <p>Lupa password</p>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-    <!-- JavaScript files-->
-    <script src="../../admin/home/vendor/jquery/jquery.min.js"></script>
-    <script src="../../admin/home/vendor/popper.js/umd/popper.min.js"> </script>
-    <script src="../../admin/home/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../../admin/home/vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="../../admin/home/vendor/chart.js/Chart.min.js"></script>
-    <script src="../../admin/home/vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="../../admin/home/js/front.js"></script>
-
-
-  <script>
+    <script src="<?= $base_url; ?>vendor/jquery/jquery.min.js"></script>
+    <script src="<?= $base_url; ?>vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="<?= $base_url; ?>vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<?= $base_url; ?>vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="<?= $base_url; ?>assets/js/front.js"></script>
+    <script>
       $(document).ready(function(){
         setTimeout(function(){$(".alert").fadeIn('slow');}, 150);});
-        setTimeout(function(){$(".alert").fadeOut('slow');}, 10000);
-  </script>
+        setTimeout(function(){$(".alert").fadeOut('slow');}, 1000);
+    </script>
   </body>
 </html>

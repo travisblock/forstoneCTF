@@ -21,19 +21,19 @@ if(!isset($_SESSION['login'])){
 <body>
 <?php 
 include_once("../admin@yusuf32/config.php");
-$idu      =       intval($_SESSION['id']);
-$nick     =      aman($_POST['nick']);
-$username =  aman($_POST['usrname']);
-$password =  md5($_POST['password']);
-$email    =     aman($_POST['email']);
-$web      =       aman($_POST['web']);
-$facebook =  aman($_POST['facebook']);
-$github   =    aman($_POST['github']);
-$quotes   =    aman($_POST['quotes']);
+$idu      = intval($_SESSION['id']);
+$nick     = aman($_POST['nick']);
+$username = aman($_POST['usrname']);
+$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$email    = aman($_POST['email']);
+$web      = aman($_POST['web']);
+$facebook = aman($_POST['facebook']);
+$github   = aman($_POST['github']);
+$quotes   = aman($_POST['quotes']);
 if(!empty($nick && $username)){
-  if(strlen($nick) < 3){
+  if(strlen($nick) < 2){
     echo "<script>
-        swal({ title: 'Error!', text: 'Nick minimal 3 karakter', icon: 'error', button: 'OK', }). then(function(result){ window.location = 'user.php?z=editprofil'; })
+        swal({ title: 'Error!', text: 'Nick minimal 2 karakter', icon: 'error', button: 'OK', }). then(function(result){ window.location = 'user.php?z=editprofil'; })
         </script>";
   }elseif(strlen($nick) > 30){
     echo "<script>

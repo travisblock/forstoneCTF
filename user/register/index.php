@@ -1,45 +1,42 @@
+<?php
+  include "../../admin@yusuf32/web-config.php";
+?>
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Register ForstoneCTF</title>
+    <title>Register <?= $title; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Register User ForstoneCTF">
+    <meta name="description" content="Register User <?= $title; ?>">
     <meta name="author" content="FORSTONE">
     <meta name="keywords" content="Forstone, TKJ, Web TKJ" />
     <meta name="language" content="indonesia">
     <link rel="shortcut icon" href="/img/logo.png">
     <meta name="robots" content="all,follow">
-    <link rel="stylesheet" href="../../../admin/home/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../../admin/home/vendor/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../../admin/home/css/font.css">
-    <link rel="stylesheet" href="../../../admin/home/css/style.default.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="../../../admin/home/css/custom.css"> 
-    <script src="../../assets/swal.js"></script>
+    <link rel="stylesheet" href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $base_url; ?>assets/css/style.default.css" id="theme-stylesheet">
+    <script src="<?= $base_url; ?>assets/swal.js"></script>
   </head>
   <body>
     <div class="login-page">
       <div class="container d-flex align-items-center my-4">
         <div class="form-holder has-shadow">
           <div class="row">
-            <!-- Logo & Information Panel-->
             <div class="col-lg-6">
               <div class="info d-flex align-items-center">
                 <div class="content">
                   <div class="logo">
-                    <h1><a href="/ctf" target="_blank">Forstone</a></h1>
+                    <h1><a href="/ctf" target="_blank"><?= $title; ?></a></h1>
                   </div>
                   <p>Silahkan register untuk bermain CTF</p>
                 </div>
               </div>
             </div>
-            <!-- Form Panel    -->
             <div class="col-lg-6 bg-white">
               <div class="form d-flex align-items-center">
                 <div class="content">
-                <?php
-    include "../../admin@yusuf32/config.php"; 
+                <?php 
     if($_SERVER['REQUEST_METHOD']=='POST'){
     $foto   = $_FILES['foto']['name'];
     $size   = $_FILES['foto']['size'];
@@ -51,6 +48,7 @@
     $user   = aman($_POST['user']);
     $url    = url($_POST['nama']);
     $email  = aman($_POST['email']);
+    $passw  = password_hash($_POST['password'], PASSWORD_DEFAULT);
       if(!empty($nama && $user && $email)){
         if(strlen($nama) < 3){
           echo "<div class='alert alert-danger'><strong>Error: </strong> Nick terlalu pendek (min 3 karakter)</div>";
@@ -68,7 +66,7 @@
                       $temp = explode(".", $_FILES["foto"]["name"]);
                       $nama_baru = round(microtime(true)) . '.' . end($temp);
                         if(move_uploaded_file($_FILES["foto"]["tmp_name"], $path."/" . $nama_baru)){
-                          $sql= mysqli_query($con, "INSERT into user (nick,url,usrname,password,foto,nilai,sudah,email,web,facebook,github,quotes,date,code) values ('$nama','$url','$user',md5('$_POST[password]'),'$nama_baru', '0', '0', '$email', '', '', '', '', '$tgl', '')");
+                          $sql= mysqli_query($con, "INSERT into user (nick,url,usrname,password,foto,nilai,sudah,email,web,facebook,github,quotes,date,code) values ('$nama','$url','$user','$passw','$nama_baru', '0', '0', '$email', '', '', '', '', '$tgl', '')");
                           if($sql){
                             echo "<script>
                             swal({
@@ -92,7 +90,7 @@
                     echo "<div class='alert alert-danger'><strong>Error: </strong> Format tidak diijinkan</div>";
                   }
                 }else{
-                  $sql= mysqli_query($con, "INSERT into user (nick,url,usrname,password,foto,nilai,sudah,email,web,facebook,github,quotes,date,code) values ('$nama','$url','$user',md5('$_POST[password]'),'kosong', '0', '0', '$email', '', '', '', '', '$tgl', '')");
+                  $sql= mysqli_query($con, "INSERT into user (nick,url,usrname,password,foto,nilai,sudah,email,web,facebook,github,quotes,date,code) values ('$nama','$url','$user','$passw','', '0', '0', '$email', '', '', '', '', '$tgl', '')");
                   if($sql){
                     echo "<script>
                             swal({
@@ -174,14 +172,11 @@
       
     </div>
 
-    <!-- JavaScript files-->
-    <script src="../../../admin/home/vendor/jquery/jquery.min.js"></script>
-    <script src="../../../admin/home/vendor/popper.js/umd/popper.min.js"> </script>
-    <script src="../../../admin/home/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../../../admin/home/vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="../../../admin/home/vendor/chart.js/Chart.min.js"></script>
-    <script src="../../../admin/home/vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="../../../admin/home/js/front.js"></script>
+    <script src="<?= $base_url; ?>vendor/jquery/jquery.min.js"></script>
+    <script src="<?= $base_url; ?>vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="<?= $base_url; ?>vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<?= $base_url; ?>vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="<?= $base_url; ?>assets/js/front.js"></script>
     <script>
       $(document).ready(function(){
         setTimeout(function(){$(".alert").fadeIn('slow');}, 150);});

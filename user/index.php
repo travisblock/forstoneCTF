@@ -1,23 +1,26 @@
 <?php
 ob_start();
-include"../admin@yusuf32/config.php";
+include "../admin@yusuf32/web-config.php";
 $error  = "";
 if($_SERVER['REQUEST_METHOD']=='POST'){
-  $pass   = addslashes(trim(md5($_POST['password'])));
+  $pass   = $_POST['password'];
   $usr    = addslashes(trim($_POST['user']));
-  $sqlcek = mysqli_query($con, "select * from user where usrname='$usr' AND password='$pass'");
+  $sqlcek = mysqli_query($con, "select * from user where usrname='$usr'");
   $jml    = mysqli_num_rows($sqlcek);
   $d      = mysqli_fetch_array($sqlcek);
   
   if($jml > 0) {
-    session_start();
-    $_SESSION['login']  = TRUE;
-    $_SESSION['user']   = $d['usrname'];
-    $_SESSION['id']     = $d['id'];
-    $_SESSION['nama']   = $d['nick'];
-    $_SESSION['foto']   = $d['foto'];
-    header('location:user.php');
-    
+    if(password_verify($pass, $d['password'])){
+      session_start();
+      $_SESSION['login']  = TRUE;
+      $_SESSION['user']   = $d['usrname'];
+      $_SESSION['id']     = $d['id'];
+      $_SESSION['nama']   = $d['nick'];
+      $_SESSION['foto']   = $d['foto'];
+      header('location:user.php');
+    }else{
+      $error = "<div class='alert alert-danger'><strong>Error: </strong> Username atau password tdk cocok</div>";
+    }
   }else{
     $error = "<div class='alert alert-danger'><strong>Error: </strong> Username atau password tdk cocok</div>";
   }
@@ -29,19 +32,15 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Login ForstoneCTF</title>
-    <meta name="description" content="Login User ForstoneCTF">
-    <meta name="author" content="FORSTONE">
-    <meta name="keywords" content="Forstone, TKJ, Web TKJ" />
+    <title>Login <?= $title; ?></title>
+    <meta name="description" content="Login User <?= $title; ?>">
+    <meta name="author" content="ForstoneCTF">
+    <meta name="keywords" content="CTF, <?= $title; ?>" />
     <meta name="language" content="indonesia">
-    <link rel="shortcut icon" href="/img/logo.png">
     <meta name="robots" content="all,follow">
-    <link rel="stylesheet" href="../../admin/home/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../admin/home/vendor/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../admin/home/css/font.css">
-    <link rel="stylesheet" href="../../admin/home/css/style.default.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="../../admin/home/css/custom.css">
-    <link rel="shortcut icon" href="/img/logo.png">
+    <link rel="stylesheet" href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $base_url; ?>assets/css/style.default.css" id="theme-stylesheet">
+    <link rel="shortcut icon" href="<?= $logo; ?>">
   </head>
   <body>
     <div class="login-page">
@@ -73,7 +72,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
               <div class="info d-flex align-items-center">
                 <div class="content">
                   <div class="logo">
-                    <h1><a href="/ctf" target="_blank">Forstone</a></h1>
+                    <h1><a href="<?= $base_url; ?>" target="_blank"><?= $title; ?></a></h1>
                   </div>
                   <p>Silahkan login untuk bermain CTF</p>
                 </div>
@@ -84,16 +83,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         </div>
       </div>
     </div>
-    <!-- JavaScript files-->
-    <script src="../../admin/home/vendor/jquery/jquery.min.js"></script>
-    <script src="../../admin/home/vendor/popper.js/umd/popper.min.js"> </script>
-    <script src="../../admin/home/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../../admin/home/vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="../../admin/home/vendor/chart.js/Chart.min.js"></script>
-    <script src="../../admin/home/vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="../../admin/home/js/front.js"></script>
 
-
+    <script src="<?= $base_url; ?>vendor/jquery/jquery.min.js"></script>
+    <script src="<?= $base_url; ?>vendor/popper.js/umd/popper.min.js"> </script>
+    <script src="<?= $base_url; ?>vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<?= $base_url; ?>vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="<?= $base_url; ?>assets/js/front.js"></script>
+    
   <script>
       $(document).ready(function(){
         setTimeout(function(){$(".alert").fadeIn('slow');}, 150);});
