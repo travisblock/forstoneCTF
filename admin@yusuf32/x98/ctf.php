@@ -107,7 +107,7 @@ if(isset($_GET['tipe'])){
         <div class="row">
             <div class="col-lg-12">
             <div class="block margin-bottom-sm">
-                <div class="title"><strong>Manage Soal ctf.forstone.web.id</strong></div>
+                <div class="title"><strong>Manage Chall</strong></div>
                 <div class="table-responsive">
                     <a class='btn btn-info' href='?x=ctf&tipe=tambah'>+ soal</a> 
                 <table class="table">

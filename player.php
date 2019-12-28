@@ -24,7 +24,7 @@ if($ono > 0){
   <meta name="keywords" content="CTF" />
   <meta name="language" content="indonesia">  
   <meta name="robots" content="all,follow">
-  <link rel="shortcut icon" href="/img/logo.png">
+  <link rel="shortcut icon" href="<?= $logo; ?>">
   <title><?php echo aman($ok['nick']);?> Profile</title>
 
   <link href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -62,7 +62,7 @@ if($ono > 0){
     </div>
   </nav>
 
-  <!-- Profile -->
+
   <section class="bg-light" id="team">
     <div class="container">
         <div class="text-center">

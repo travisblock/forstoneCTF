@@ -15,15 +15,15 @@ if(isset($_GET['tipe'])){
               <input type='hidden' name='id' value='$d[id]'>
                 <div class='form-group'>
                   <label for='inlineFormInput' class='sr-only'>Nama</label>
-                  <input name='nick' value='$d[nick]' type='text' class='mr-sm-2 form-control'>
+                  <input name='nick' value='$d[nick]' placeholder='Nick' type='text' class='mr-sm-2 form-control'>
                 </div>
                 <div class='form-group'>
                   <label for='inlineFormInput' class='sr-only'>Username</label>
-                  <input name='usrname' value='$d[usrname]' type='text' class='mr-sm-2 form-control'>
+                  <input name='usrname' value='$d[usrname]' placeholder='Username' type='text' class='mr-sm-2 form-control'>
                 </div>
                  <div class='form-group'>
                   <label for='inlineFormInput' class='sr-only'>Password</label>
-                  <input name='password' value='$d[password]' type='text' placeholder='kosongkan jika tidak di ganti' class='mr-sm-4 form-control'>
+                  <input name='password' type='password' placeholder='Password' class='mr-sm-4 form-control'>
                 </div>
                 <br>
                 <div class='form-group'>
@@ -46,7 +46,7 @@ if(isset($_GET['tipe'])){
         <div class="row">
             <div class="col-lg-12">
             <div class="block margin-bottom-sm">
-                <div class="title"><strong>Manage user ctf.forstone.web.id</strong></div>
+                <div class="title"><strong>Manage User</strong></div>
                 <div class="table-responsive"> 
                 <table class="table">
                     <thead>
@@ -72,8 +72,8 @@ if(isset($_GET['tipe'])){
                         <td>$nic</td>
                         <td>$usern</td>
                         <td>$k[nilai]</td>
-                        <td width='5%'><a href='?x=user&tipe=edit&id=$k[id]'>edit</a></td>
-                        <td width='5%'><a href='x98/hapus.php?id=$k[id]' onClick='return confirm(\"Anda Yakin Akan Menghafus?\")'>delete</a>
+                        <td width='5%'><a href='?x=user&tipe=edit&id=$k[id]' class='btn btn-info'>edit</a></td>
+                        <td width='5%'><a href='x98/hapus.php?id=$k[id]' onClick='return confirm(\"Anda Yakin Akan Menghafus?\")' class='btn btn-danger'>delete</a>
                         </td>                          
                     </tr>
                     </tbody>";

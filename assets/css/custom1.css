@@ -1,0 +1,56 @@
+
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}.avatar-2 {
+  vertical-align: middle;
+  width: 70px;
+  height: 70px;margin-right:10px;
+  border-radius: 50%;
+}
+/* your styles go here */
+.fors :hover {
+    background: #5a5a5a;
+}
+.titlea h2, .titlea form{
+    text-align: center
+}
+.titlea a{
+    margin-left:5px
+}
+.titlea form {
+    padding-top:10px;
+    padding: 10px;
+    margin-left:-10px
+}
+.titlea form input[type="text"]{
+    background:transparent; 
+    color:#8a8d93; 
+    border:1px solid #00adfe;
+    padding: 3px;
+}
+.titlea form input[type="submit"]{
+    background:#00adfe; 
+    color:#333333; 
+    border:2px solid #00adfe;
+    padding: 3px;
+}
+.titlea input[type="submit"]:hover {
+    background: transparent;
+    color:#fff
+}
+.fors td a{
+    color:#00adfe
+}
+.nantor{
+    color:#43a382;
+    background: blue;
+}
+.avatar-3 {
+    vertical-align: middle;
+    width: 100px;
+    height: 100px;margin-right:10px;
+    border-radius: 10%;
+  }

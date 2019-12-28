@@ -9,6 +9,9 @@ if(isset($_GET['x'])){
 	}elseif($_GET['x']=='web'){
     include "x98/info_web.php";
 
+  }elseif($_GET['x']=='quotes'){
+    include "x98/quotes.php";
+
   }else{
 		echo "";
 	}

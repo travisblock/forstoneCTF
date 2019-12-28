@@ -12,7 +12,7 @@ include_once "admin@yusuf32/web-config.php";
   <meta name="keywords" content="CTF" />
   <meta name="language" content="indonesia">  
   <meta name="robots" content="all,follow">
-  <link rel="shortcut icon" href="<?= $base_url; ?>img/logo.png">
+  <link rel="shortcut icon" href="<?= $logo; ?>">
   <meta content='<?= $img_header; ?>' property='og:image'/>
   <meta content='<?= $description; ?>' property='og:description'/>
   <title><?= $title; ?></title>

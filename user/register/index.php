@@ -12,7 +12,7 @@
     <meta name="author" content="FORSTONE">
     <meta name="keywords" content="Forstone, TKJ, Web TKJ" />
     <meta name="language" content="indonesia">
-    <link rel="shortcut icon" href="/img/logo.png">
+    <link rel="shortcut icon" href="<?= $logo; ?>">
     <meta name="robots" content="all,follow">
     <link rel="stylesheet" href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= $base_url; ?>assets/css/style.default.css" id="theme-stylesheet">

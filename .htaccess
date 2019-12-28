@@ -1,0 +1,16 @@
+Header set Access-Control-Allow-Origin "*"
+
+RewriteEngine On
+Options +FollowSymLinks 
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+#RewriteRule ^(.*)$ $1.php
+
+RewriteRule ^player/([a-zA-Z0-9()._-`']+)*$ ./player.php?nick=$1
+RewriteRule ^scoreboard/([a-zA-Z0-9()._-`']+)*$ ./scoreboard.php?page=$1
+
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php

@@ -4,7 +4,7 @@ if(!isset($_SESSION['loginadm'])){
   header('location:index.php');
   exit;
 }
-include "config.php";
+include "web-config.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,6 +22,7 @@ include "config.php";
     <link rel="stylesheet" href="<?= $base_url; ?>assets/css/style.default.css" id="theme-stylesheet">
     <link rel="stylesheet" href="<?= $base_url; ?>assets/css/custom1.css">
     <link rel="shortcut icon" href="<?= $base_url; ?>assets/img/logo.png">
+    <link rel="shortcut icon" href="<?= $logo; ?>">
     <script src="<?= $base_url; ?>vendor/jquery/jquery.js"></script>
     <script src="<?= $base_url; ?>assets/jquery-ui.js"></script>
     <link rel="stylesheet" type="text/css" href="<?= $base_url; ?>assets/jquery-ui.css">
@@ -43,7 +44,7 @@ include "config.php";
         <div class="container-fluid d-flex align-items-center justify-content-between">
           <div class="navbar-header">
             <a href="index.html" class="navbar-brand">
-              <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">For</strong><strong>Stone</strong></div>
+              <div class="brand-text brand-big visible text-uppercase"><?= $title; ?></div>
               <div class="brand-text brand-sm"><strong class="text-primary"></strong></div></a>
             <button class="sidebar-toggle"><i class="fa fa-long-arrow-left"></i></button>
           </div>
@@ -65,26 +66,27 @@ include "config.php";
                 <li><a href="?x=ctf"> <i class="icon-bill"></i>CTF</a></li>
                 <li><a href="?x=user"> <i class="icon-user-1"></i>User</a></li>
                 <li><a href="?x=web"> <i class="icon-info"></i>Web Info</a></li>
+                <li><a href="?x=quotes"> <i class="icon-contract"></i>Quotes</a></li>
+
         </ul>
       </nav>      
       <div class="page-content">
         <div class="page-header no-margin-bottom">
           <div class="container-fluid">
-            <h2 class="h5 no-margin-bottom"><a>ForstoneCTF</a></h2>
+            <h2 class="h5 no-margin-bottom"><a><?= $title; ?></a></h2>
           </div>
         </div>
-        <!-- Breadcrumb-->
         <div class="container-fluid">
           <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-            <li class="breadcrumb-item active">Ctf</li>
+            <li class="breadcrumb-item active">CTF</li>
           </ul>
         </div>
         <?php include "content.php"; ?>
         <footer class="footer">
           <div class="footer__block block no-margin-bottom">
             <div class="container-fluid text-center">
-              <p class="no-margin-bottom">2019 &copy; ForstoneCTF</p>
+              <p class="no-margin-bottom">Powered by ForstoneCTF</p>
             </div>
           </div>
         </footer>

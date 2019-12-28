@@ -3,32 +3,27 @@ include_once "admin@yusuf32/web-config.php";
 ?>
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="<?= $description; ?>">
   <meta name="author" content="ForstoneCTF">
-  <meta name="keywords" content="CTF" />
+  <meta name="keywords" content="CTF, <?= $title; ?>" />
   <meta name="language" content="indonesia">  
   <meta name="robots" content="all,follow">
-  <link rel="shortcut icon" href="<?= $base_url; ?>img/logo.png">
+  <link rel="shortcut icon" href="<?= $logo; ?>">
   <meta content='<?= $img_header; ?>' property='og:image'/>
   <meta content='<?= $description; ?>' property='og:description'/>
   <title><?= $title; ?></title>
-
   <link href="<?= $base_url; ?>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="<?= $base_url; ?>vendor/font-awesome/css/all.min.css" rel="stylesheet" type="text/css">
   <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
   <link href="<?= $base_url; ?>assets/agency.css" rel="stylesheet">
   <link href="<?= $base_url; ?>assets/css/custom.css" rel="stylesheet">
   <link href="<?= $base_url; ?>vendor/fontawesome-free/css/all.css" rel="stylesheet">
-
 </head>
 
 <body id="page-top">
-
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
     <div class="container">
       <a class="navbar-brand js-scroll-trigger" href="#page-top"><?= $title; ?></a>
@@ -56,7 +51,7 @@ include_once "admin@yusuf32/web-config.php";
   </nav>
 
   <!-- Header -->
-  <header class="masthead">
+  <header class="masthead" style="background-image: url('<?= $img_header; ?>')">
     <div class="container">
       <div class="intro-text">
         <div class="intro-lead-in">Welcome To <?= $title; ?></div>
@@ -138,22 +133,24 @@ include_once "admin@yusuf32/web-config.php";
 
           <div id="carouselExampleFade" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
-              <div class="carousel-item active">                
-                <p class="text-info">IoT without security = Internet of Threats</p>
-                <h9>- Stephane Nappo -</h9>
-              </div>
-              <div class="carousel-item">
-                <p class="text-info">No System Is Save</p>
-                <h9>- Heker Clay -</h9>
-              </div>
-              <div class="carousel-item">
-                <p class="text-info">Makan Bang</p>
-                <h9>- Yong Lex -</h9>
-              </div>
-              <div class="carousel-item">
-                <p class="text-info">Maybe You Find Some Knowledge Here</p>
-                <h9>- Dwi Mulia -</h9>
-              </div>
+              <?php
+                $sqlQuotes1  = mysqli_query($con, "SELECT * FROM quotes ORDER BY id ASC LIMIT 1");
+                while($dataQ1 = mysqli_fetch_array($sqlQuotes1)){
+                  echo "<div class='carousel-item active'>                
+                          <p class='text-info'>$dataQ1[text]</p>
+                          <h9>- $dataQ1[author] -</h9>
+                        </div>";
+                }
+                $jml = mysqli_num_rows(mysqli_query($con, "SELECT * FROM quotes"));
+                $lim = $jml - 1;
+                $sqlQuotes2  = mysqli_query($con, "SELECT * FROM quotes ORDER BY id DESC LIMIT $lim");
+                while($dataQ2 = mysqli_fetch_array($sqlQuotes2)){
+                  echo "<div class='carousel-item'>                
+                          <p class='text-info'>$dataQ2[text]</p>
+                          <h9>- $dataQ2[author] -</h9>
+                        </div>";
+                }
+              ?>
             </div>       
             <a class="carousel-control-prev" href="#carouselExampleFade" role="button" data-slide="prev">
               <span class="carousel-control-prev-iconn" ></span>
