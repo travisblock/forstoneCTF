@@ -9,7 +9,7 @@ include_once "admin@yusuf32/web-config.php";
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="<?= $description; ?>">
   <meta name="author" content="ForstoneCTF">
-  <meta name="keywords" content="CTF" />
+  <meta name="keywords" content="CTF, <?= $title; ?>" />
   <meta name="language" content="indonesia">  
   <meta name="robots" content="all,follow">
   <link rel="shortcut icon" href="<?= $logo; ?>">
