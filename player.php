@@ -20,7 +20,7 @@ if($ono > 0){
   <meta name="description" content="<?php echo $title . " - " . aman($ok['nick'])?> Profiles, <?php echo "Rank $renk[rank], $ok[nilai] Points,  Since ";echo date('j F Y', strtotime($ok['date'])); ?> ">
   <meta content='<?php echo $title . " - " . aman($ok['nick'])?> Profiles, <?php echo "Rank $renk[rank], $ok[nilai] Points,  Since ";echo date('j F Y', strtotime($ok['date'])); ?> ' property='og:description'/>
   <meta content='http://forstone.web.id/ctf/user/img/<?php echo $ok['foto']; ?>' property='og:image'/>
-  <meta name="author" content="ForstoneCTF">
+  <meta name="author" content="ForstoneCTF, <?= $title; ?>">
   <meta name="keywords" content="CTF" />
   <meta name="language" content="indonesia">  
   <meta name="robots" content="all,follow">
